@@ -35,6 +35,26 @@ var app = {
     onDeviceReady: function() {
         app.receivedEvent('deviceready');
         navigator.splashscreen.hide();
+        
+        var region = new ibeacon.Region({
+                                            uuid: 'E2C56DB5-DFFB-48D2-B060-D0F5A71096E0'
+                                        });
+        var count = 0;
+        ibeacon.startRangingBeaconsInRegion({
+                                                region: region,
+                                                didRangeBeacons: function(result) {
+                                                    console.log(result);
+                                                    console.log('I see ' + result.beacons.length + ' beacons');
+                                                    count++;
+                                                    if (count % 5 == 0) {
+                                                        //alert('hi');
+                                                       window.plugin.notification.local.add({ message: 'I see ' + result.beacons.length + ' beacons' });
+
+                                                        //post to request.bin
+                                                        //alert(result.beacons.length);
+                                                    }
+                                                }
+                                            });
     },
     // Update DOM on a Received Event
     receivedEvent: function(id) {
