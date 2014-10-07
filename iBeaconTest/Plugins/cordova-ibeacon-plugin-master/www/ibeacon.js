@@ -192,6 +192,8 @@ var ibeacon = {
       var region = new Region(result.region);
 
       if (options.hasOwnProperty('didDetermineState')) {
+          console.log("MATT THOMAS");
+          console.log(result);
         options.didDetermineState({
           region: region,
           state: result.state

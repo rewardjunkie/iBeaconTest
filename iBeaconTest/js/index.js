@@ -38,37 +38,52 @@ var app = {
         navigator.splashscreen.hide();
         
         var region = new ibeacon.Region({
-                                            uuid: 'E2C56DB5-DFFB-48D2-B060-D0F5A71096E0'
+                                            uuid: 'E2C56DB5-DFFB-48D2-B060-D0F5A71096E0',
                                         });
+        
+        
         var count = 0;
-        ibeacon.startRangingBeaconsInRegion({
-                                                region: region,
-                                                didRangeBeacons: function(result) {
-                                                    console.log(result);
-                                                    console.log('I see ' + result.beacons.length + ' beacons: ' + new Date());
-                                                    count++;
-                                                    if (count % 5 == 0) {
-                                                        //alert('hi');
-                                                        window.plugin.notification.local.add({ message: 'I see ' + result.beacons.length + ' beacons: ' + new Date() });
-                                                        //post to request.bin
-                                                        //alert(result.beacons.length);
-                                                    }
-                                                }
-                                            });
+
+        /*ibeacon.startRangingBeaconsInRegion({
+        region: region,
+        didRangeBeacons: function(result) {
+        console.log(result);
+        console.log('I see ' + result.beacons.length + ' beacons: ' + new Date());
+        count++;
+        if (count % 5 == 0) {
+        //alert('hi');
+        window.plugin.notification.local.add({ message: 'I see ' + result.beacons.length + ' beacons: ' + new Date() });
+        //post to request.bin
+        //alert(result.beacons.length);
+        }
+        }
+        });*/
         
         ibeacon.startMonitoringForRegion({
                                              region: region,
                                              didDetermineState: function(result) {
-                                                 if (result.state === 'inside')
-                                                 {
+                                                 if (result.state === 'inside') {
                                                      console.log('I see you!');
-                                                     window.plugin.notification.local.add({ message: 'I see you! ' + new Date() });
-                                                     }
-                                                 else
-                                                 {
+                                                     //console.log(result);
+                                                     ibeacon.startRangingBeaconsInRegion({
+                                                                                             region: region,
+                                                                                             didRangeBeacons: function(result) {
+                                                                                                 console.log(result);
+                                                                                                 var msg = 'I see beacon, major:' + result.beacons[0].major + ' minor: ' + result.beacons[0].minor;
+                                                                                                 console.log(msg);
+                                                                                                 count++;
+                                                                                                 if (count % 5 == 0) {
+                                                                                                     window.plugin.notification.local.add({ message: msg });
+                                                                                                     window.plugin.notification.local.add({ message: result.beacons.length });
+                                                                                                 }
+                                                                                             }
+                                                                                         });
+                                                     window.plugin.notification.local.add({ message: 'I see you ' + new Date() });
+                                                 }
+                                                 else {
                                                      console.log('Where are you?');
                                                      window.plugin.notification.local.add({ message: 'Where are you? ' + new Date() });
-                                                     }
+                                                 }
                                              }
                                          });
     },
