@@ -13,7 +13,10 @@
     "2"
   ],
   "iOSBackgroundMode": [
+    "audio",
     "location",
+    "voip",
+    "external-accessory",
     "bluetooth-central",
     "bluetooth-peripheral"
   ],

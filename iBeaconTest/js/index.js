@@ -34,6 +34,7 @@ var app = {
     // function, we must explicity call 'app.receivedEvent(...);'
     onDeviceReady: function() {
         app.receivedEvent('deviceready');
+        window.plugin.notification.local.add({ message: 'Welcome boy!' });
         navigator.splashscreen.hide();
         
         var region = new ibeacon.Region({
@@ -44,17 +45,32 @@ var app = {
                                                 region: region,
                                                 didRangeBeacons: function(result) {
                                                     console.log(result);
-                                                    console.log('I see ' + result.beacons.length + ' beacons');
+                                                    console.log('I see ' + result.beacons.length + ' beacons: ' + new Date());
                                                     count++;
                                                     if (count % 5 == 0) {
                                                         //alert('hi');
-                                                       window.plugin.notification.local.add({ message: 'I see ' + result.beacons.length + ' beacons' });
-
+                                                        window.plugin.notification.local.add({ message: 'I see ' + result.beacons.length + ' beacons: ' + new Date() });
                                                         //post to request.bin
                                                         //alert(result.beacons.length);
                                                     }
                                                 }
                                             });
+        
+        ibeacon.startMonitoringForRegion({
+                                             region: region,
+                                             didDetermineState: function(result) {
+                                                 if (result.state === 'inside')
+                                                 {
+                                                     console.log('I see you!');
+                                                     window.plugin.notification.local.add({ message: 'I see you! ' + new Date() });
+                                                     }
+                                                 else
+                                                 {
+                                                     console.log('Where are you?');
+                                                     window.plugin.notification.local.add({ message: 'Where are you? ' + new Date() });
+                                                     }
+                                             }
+                                         });
     },
     // Update DOM on a Received Event
     receivedEvent: function(id) {
